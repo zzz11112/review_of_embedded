@@ -6,6 +6,9 @@
 * 什么是BootLoader：
   * 操作系统内核运行之前运行的一小段程序
   * 目的：从操作系统角度看，正确调用内核来执行
+  * 常见的BootLoader：
+    * ROM BootLoader，BIOS BootLoader(x86)
+    * U-boot(通用BootLoader)
 * 主要工作
   * 初始化硬件设备和建立内存空间映射图
   * 将系列的软硬件环境带到一个合适的状态
@@ -38,9 +41,33 @@
     4. 设置内核启动参数
     5. 调用内核
 * 烧写BootLoader
-  * 烧写方法：
+  * 烧写方法：串口
 * 加载或烧写内核和文件系统
-  * 操作模式
-  * 编程
-* 如何检测内存可读写
+  * 编程：
+    * trampoline:
+      * 流程：
+        1. 汇编编写，作为stage2的入口点
+        2. 在trampoline中用CPU跳转指令跳入main()函数中执行
+        3. main()返回后，cpu执行路径回到trampoline
+      * 原因：
+        * 无法向main()函数传递参数/无法处理函数返回
+        * 相当于main()的外部包裹(external wrapper)
+* 如何检测内存可读写：<br>
+  ![](内存检测过程.png "检测流程")
 * 与内核的通信
+  * 启动参数
+    * 以标记列表(tagged list)的形式来传递启动参数
+    * tagged list以标记ATAG_CORE开始,ATAG_NONE结束
+    * 标记由tag_header结构(标识被传递参数)以及随后的参数值数据结构组成
+    * 嵌入式Linux中，常见启动参数：
+      * ATAG_CORE
+      * ATAG_MEM
+      * ATAG_CMDLINE
+      * ATAG_RAMDISK
+      * ATAG_INITRD
+  * 跳转：
+    * 直接跳转到内核第一条指令处
+    * 跳转条件：
+      * CPU寄存器设置：R0=0; R1=机器类型; R2=启动参数标记列表在RAM中起始基地址
+      * CPU模式：禁止中断; svc模式
+      * Cache和MMU设置：MMU关闭; 数据Cache关闭
