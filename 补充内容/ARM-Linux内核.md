@@ -60,7 +60,7 @@
   * lsmod：列出kernel中安装的模块
   * insmod：把某个module安装到kernel
   * rmmod：卸载module
-  * depmod：制造module dependency file，告诉insmod去哪找modules安装
+  * depmod：制造module dependency file，告诉insmod去哪找modules安装，相当于Makefile依赖
 
 ### 4. 中断
 
@@ -70,8 +70,8 @@
 ### 5. 系统调用
 
 * 实现方式
-  * X86：通过自陷指令"INT 80"实现，系统调用号由eax传递，参数通过寄存器传递，返回值通过eax返回
-  * ARM：通过自陷指令"SWI"实现，系统调用号是SWI操作数，参数通过寄存器传递，返回值保存至寄存器R0
+  * X86：通过自陷指令"INT 80"实现，系统调用号由eax(Extended Accumulator Register)传递，参数通过寄存器传递，返回值通过eax返回
+  * ARM：通过自陷指令"SWI"实现，系统调用号是SWI(Software Interrupt)操作数，参数通过寄存器传递，返回值保存至寄存器R0
 
 ### 6. 系统启动和初始化
 
